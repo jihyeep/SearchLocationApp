@@ -16,6 +16,7 @@ class MapViewModel: NSObject, CLLocationManagerDelegate {
     var mapStyle: MapStyle = .standard
     var searchResults: [MKMapItem] = []
     var selectedPlace: MKMapItem?
+    var route: MKRoute?
     
     private var locationManager: CLLocationManager = CLLocationManager()
     
@@ -46,7 +47,18 @@ class MapViewModel: NSObject, CLLocationManagerDelegate {
     }
     
     func getDirection() {
-        print("direction")
+        let request = MKDirections.Request()
+        request.source = MKMapItem.forCurrentLocation()
+        request.destination = selectedPlace!
+        request.transportType = .automobile
+        
+        let directions = MKDirections(request: request)
+        // 비동기 호출
+        directions.calculate { [weak self] response, error in
+            guard let response = response else { return }
+            self?.route = response.routes.first
+            
+        }
     }
 
     func shareLocation() {

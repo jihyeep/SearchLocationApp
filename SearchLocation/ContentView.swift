@@ -24,6 +24,11 @@ struct ContentView: View {
                                 .clipShape(Circle())
                         }
                     }
+                    // 경로 만들기
+                    if let route = viewModel.route {
+                        MapPolyline(route.polyline)
+                            .stroke(.blue, lineWidth: 5)
+                    }
                 }
                 // 현재 위치 버튼
                 .mapControls {
