@@ -15,11 +15,13 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottom) {
-                Map(position: $viewModel.cameraPosition) {
+                Map(position: $viewModel.cameraPosition, selection: $viewModel.selectedPlace) {
                     ForEach(viewModel.searchResults, id: \.self) { place in
                         Annotation(place.name ?? "", coordinate: place.placemark.coordinate) {
                             Image(systemName: "mappin.circle.fill")
                                 .foregroundStyle(.pink)
+                                .background(.white)
+                                .clipShape(Circle())
                         }
                     }
                 }
@@ -48,7 +50,11 @@ struct ContentView: View {
                         default:
                             viewModel.mapStyle = .standard
                     
+                        }
                     }
+                if viewModel.selectedPlace != nil {
+                    PlaceInfoPanel(viewModel: viewModel)
+                        .padding()
                 }
             }
         }
