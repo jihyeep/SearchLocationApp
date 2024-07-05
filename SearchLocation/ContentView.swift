@@ -35,28 +35,29 @@ struct ContentView: View {
                     MapScaleView()
                     MapUserLocationButton()
                 }
-                    .mapStyle(viewModel.mapStyle)
-                    .navigationTitle("SearchLocation")
-                    .searchable(text: $viewModel.searchText)
-                    .searchScopes($style) {
-                        Text("Standard").tag(0)
-                        Text("Imagery").tag(1)
-                        Text("Hybrid").tag(2)
-                    }
-                    // searchScopes 적용
-                    .onChange(of: style) {
-                        switch style {
-                        case 0:
-                            viewModel.mapStyle = .standard
-                        case 1:
-                            viewModel.mapStyle = .imagery
-                        case 2:
-                            viewModel.mapStyle = .hybrid
-                        default:
-                            viewModel.mapStyle = .standard
-                    
-                        }
-                    }
+                .mapStyle(viewModel.mapStyle)
+                .navigationTitle("SearchLocation")
+                .searchable(text: $viewModel.searchText)
+                // 세그먼트 선택
+                 Picker("Map Style", selection: $style) {
+                     Text("Standard").tag(0)
+                     Text("Imagery").tag(1)
+                     Text("Hybrid").tag(2)
+                 }
+                 .pickerStyle(SegmentedPickerStyle())
+                 .padding()
+                 .onChange(of: style) { newValue in
+                     switch newValue {
+                     case 0:
+                         viewModel.mapStyle = .standard
+                     case 1:
+                         viewModel.mapStyle = .imagery
+                     case 2:
+                         viewModel.mapStyle = .hybrid
+                     default:
+                         viewModel.mapStyle = .standard
+                     }
+                 }
                 if viewModel.selectedPlace != nil {
                     PlaceInfoPanel(viewModel: viewModel)
                         .padding()
